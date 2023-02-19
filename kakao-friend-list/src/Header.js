@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default () => {
-  const IconButton = ({ name, bgColor }) => {
+  const IconButton = ({ name }) => {
+    const [pressColor, setPressColor] = useState("white");
     return (
       <TouchableOpacity
         hitSlop={{ top: 15, bottom: 15 }}
-        style={{ paddingHorizontal: 6, backgroundColor: "white" }}
+        style={{
+          paddingHorizontal: 6,
+          backgroundColor: pressColor,
+          borderRadius: "30%",
+        }}
+        onPressOut={() => setPressColor("white")}
+        onPressIn={() => setPressColor("lightgray")}
       >
         <Ionicons name={name} size={24} color="black" />
       </TouchableOpacity>

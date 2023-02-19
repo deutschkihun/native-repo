@@ -1,5 +1,5 @@
 import { ScrollView, View } from "react-native";
-import Profile from "./MyProfile";
+import Profile from "./Profile";
 import Margin from "./components/Margin";
 export default (props) => {
   return (

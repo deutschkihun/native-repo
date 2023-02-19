@@ -2,15 +2,14 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export default (props) => {
-  console.log(props);
+export default ({ friendProfileLen, onPressArrow, isOpened }) => {
   return (
     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-      <Text style={{ color: "grey" }}>친구 {props.friendProfileLen}</Text>
+      <Text style={{ color: "grey" }}>친구 {friendProfileLen}</Text>
 
-      <TouchableOpacity onPress={props.onPressArrow}>
+      <TouchableOpacity onPress={onPressArrow}>
         <MaterialIcons
-          name={props.isOpened ? "keyboard-arrow-up" : "keyboard-arrow-down"}
+          name={isOpened ? "keyboard-arrow-up" : "keyboard-arrow-down"}
           size={24}
           color="lightgrey"
         />

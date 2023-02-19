@@ -1,46 +1,81 @@
 import { useState } from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Header from "./src/Header";
-import MyProfile from "./src/MyProfile";
-import { myProfile } from "./src/data";
-import { getStatusBarHeight, isIPhone12 } from "react-native-status-bar-height";
+import Profile from "./src/Profile";
 import Margin from "./src/components/Margin";
-import Divison from "./src/components/Divison";
-import FriendSection from "./src/FriendSection";
-import { friendProfiles } from "./src/data";
-import FriendList from "./src/FriendList";
+import { friendProfiles, myProfile } from "./src/data";
 
-const statusBarHeight = getStatusBarHeight(true);
+import Division from "./src/components/Division";
+import FriendSection from "./src/FriendSection";
+import FriendList from "./src/FriendList";
+import TabBar from "./src/components/TabBar";
 
 export default function App() {
   const [isOpened, setIsOpened] = useState(true);
+  const [selectedTabIdx, setSelectedTabIdx] = useState(0);
 
   const onPressArrow = () => {
     setIsOpened(!isOpened);
   };
+
+  const ItemSeparatorComponent = () => <Margin height={13} />;
+
+  const renderItem = ({ item }) => (
+    <View>
+      <Profile
+        uri={item.uri}
+        name={item.name}
+        introduction={item.introduction}
+        isMe={false}
+      />
+    </View>
+  );
+
+  const ListHeaderComponent = () => (
+    <View style={{ backgroundColor: "white" }}>
+      <Header />
+      <Margin height={10} />
+
+      <Profile
+        uri={myProfile.uri}
+        name={myProfile.name}
+        introduction={myProfile.introduction}
+        isMe={true}
+      />
+      <Margin height={15} />
+      <Division />
+      <Margin height={12} />
+      <FriendSection
+        friendProfileLen={friendProfiles.length}
+        onPressArrow={onPressArrow}
+        isOpened={isOpened}
+      />
+    </View>
+  );
+
+  const ListFooterComponent = () => <Margin height={10} />;
+
   return (
     <SafeAreaProvider>
       <SafeAreaView
         style={styles.container}
-        edges={["top", "right", "bottom", "left"]} // 예외없이 모두 안전영역 적용
+        edges={["top", "right", "bottom", "left"]} // set safe area to all directions
       >
-        <Header />
-        <Margin height={10} />
-        <Margin height={10} />
-        <MyProfile
-          uri={myProfile.uri}
-          name={myProfile.name}
-          introduction={myProfile.introduction}
+        <FlatList
+          data={isOpened ? friendProfiles : []}
+          contentContainerStyle={{ paddingHorizontal: 15 }}
+          keyExtractor={(_, index) => index}
+          stickyHeaderIndices={[0]}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+          renderItem={renderItem}
+          ListHeaderComponent={ListHeaderComponent}
+          ListFooterComponent={ListFooterComponent}
         />
-        <Margin height={15} />
-        <FriendSection
-          friendProfileLen={friendProfiles.length}
-          onPressArrow={onPressArrow}
-          isOpened={isOpened}
+        <TabBar
+          selectedTabIdx={selectedTabIdx}
+          setSelectedTabIdx={setSelectedTabIdx}
         />
-        <Divison />
-        <FriendList data={friendProfiles} isOpened={isOpened} />
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -50,7 +85,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: statusBarHeight,
-    paddingHorizontal: 15,
   },
 });
